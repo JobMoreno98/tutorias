@@ -45,22 +45,25 @@
                             <div class="col-sm-12 border-bottom mb-1 pb-1">
                                 <h5>Registro</h5>
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <form action="{{ route('registro.evidencia') }}" method="POST" class="p-2"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    @method('POST')
-                                    <!-- Campo de archivo -->
-                                    <div class="mb-3">
-                                        <label for="imagen" class="form-label">Selecciona una imagen</label>
-                                        <input class="form-control" type="file" id="imagen" name="imagen"
-                                            accept="image/*">
-                                    </div>
-                                    <button type="submit" class="btn btn-sm btn-success">
-                                        <i class="bi bi-upload"></i> Subir
-                                    </button>
-                                </form>
-                            </div>
+                            @if (!isset($evidencia->id))
+                                <div class="col-sm-12 col-md-6">
+                                    <form action="{{ route('registro.evidencia') }}" method="POST" class="p-2"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        @method('POST')
+                                        <!-- Campo de archivo -->
+                                        <div class="mb-3">
+                                            <label for="imagen" class="form-label">Selecciona una imagen</label>
+                                            <input class="form-control" type="file" id="imagen" name="imagen"
+                                                accept="image/*">
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="bi bi-upload"></i> Subir
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+
                             <div class="ccol-sm-12 col-md-6">
 
                                 @if ($tutorias > 0)
@@ -79,7 +82,7 @@
                             <hr>
                             <p>Permite inscribirse con un Tutor en este ciclo</p>
 
-                            @if ($ciclo_actual->registro_activo == '1' && $tutorias == 0 && $fichaLlena == 1)
+                            @if ($ciclo_actual->registro_activo == '1' && $tutorias == 0 && isset($evidencia->id))
                                 <a class="btn btn-primary btn-sm m-1"
                                     href="{{ route('elegirTutoria', ['alumno_id' => Auth::user()->id, 'ciclo' => $ciclo_actual->nombre]) }}">Seleccionar
                                     Tutor</a>

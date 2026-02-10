@@ -7,7 +7,10 @@ use App\Models\AlumnoInfo;
 use App\Models\RegistroTutorias;
 use App\Models\User;
 use App\Models\Ciclo;
+use App\Models\EvidenciaForm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 
 class AlumnoController extends Controller
@@ -182,9 +185,24 @@ class AlumnoController extends Controller
             'required' => "El campo :attribute es obligatorio",
         ];
         $request->validate([
-            'imagen' => ['required', File::types(['jpg', 'jpeg'])
-                ->min(1024)
-                ->max(5 * 1024)]
-        ],$messages);
+            'imagen' => ['required', File::types(['jpg', 'jpeg'])->min(100)->max(5120)]
+        ], $messages);
+
+        $archivo = $request->file('imagen');
+        $nombre =  Auth::user()->name . '.jpg';
+        $nombre = str_replace('/', '-', $nombre);
+
+        Storage::disk('images')->put($nombre, \File::get($archivo));
+
+        EvidenciaForm::create([
+            'user_id' => Auth::user()->id,
+            'file' => $nombre
+        ]);
+
+        return redirect()
+            ->route('home')
+            ->with([
+                'message' => 'Se ha enviado exitosamente el formulario',
+            ]);
     }
 }
