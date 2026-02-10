@@ -166,8 +166,9 @@ class TutoriaController extends Controller
     public function repetir($ciclo_nuevo, $ciclo_viejo)
     {
 
+        $ciclo = Ciclo::orderBy('id', 'desc')->first();
         $existe = Tutoria::where('ciclo', $ciclo_nuevo)->count();
-        if ($existe > 0 && Auth::user()->role == 'admin') {
+        if ($existe > 0 && Auth::user()->role == 'admin' && $ciclo->nombre == $ciclo_nuevo) {
             abort(401);
         }
 
