@@ -13,6 +13,7 @@ use App\Models\Tutoria;
 use App\Models\User;
 use App\Models\TutoriaPorTutor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TutoriaController extends Controller
 {
@@ -164,6 +165,13 @@ class TutoriaController extends Controller
 
     public function repetir($ciclo_nuevo, $ciclo_viejo)
     {
+
+        $existe = Tutoria::where('ciclo', $ciclo_nuevo)->count();
+        if ($existe > 0 && Auth::user()->role == 'admin') {
+            abort(401);
+        }
+
+
         $tutores = Tutoria::select('tutoria.IdTutor', 'tutoria.cupo')->leftjoin('tutor', 'tutoria.IdTutor', '=', 'tutor.id')
             ->where('tutoria.ciclo', $ciclo_nuevo)->orderBy('tutoria.IdTutor')->pluck('tutoria.cupo', 'tutoria.IdTutor');
 
