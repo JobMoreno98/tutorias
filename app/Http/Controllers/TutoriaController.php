@@ -167,7 +167,7 @@ class TutoriaController extends Controller
     {
 
         $ciclo = Ciclo::orderBy('id', 'desc')->first();
-        $existe = Tutoria::where('ciclo', $ciclo_nuevo)->count();
+        $existe = InscripcionTutorias::where('ciclo', $ciclo_nuevo)->count();
         if ($existe > 0 && Auth::user()->role == 'admin' && $ciclo->nombre == $ciclo_nuevo) {
             abort(401);
         }
@@ -196,7 +196,7 @@ class TutoriaController extends Controller
                     $alumno->semestre = $alumno->semestre + 1;
                     $alumno->update();
 
-                    //dd($value);
+                    dd($alumno);
                 }
                 //dd($alumnos, ["Cupo nuevo" => $cupo], $idTutoria);
             }
