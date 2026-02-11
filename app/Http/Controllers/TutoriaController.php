@@ -196,7 +196,7 @@ class TutoriaController extends Controller
                     $alumno->semestre = $alumno->semestre + 1;
                     $alumno->update();
 
-                    dd($alumno);
+                    //dd($alumno);
                 }
                 //dd($alumnos, ["Cupo nuevo" => $cupo], $idTutoria);
             }
