@@ -177,6 +177,12 @@ class TutoriaController extends Controller
             ->where('tutoria.ciclo', $ciclo_nuevo)->orderBy('tutoria.IdTutor')->pluck('tutoria.cupo', 'tutoria.IdTutor');
 
         //dd($tutores);
+        $alumnos = Alumno::all();
+
+        foreach ($alumnos as $key => $value) {
+            $value->semestre = $value->semestre + 2;
+            $value->update();
+        }
 
         $repetir = Tutoria::whereIn('IdTutor', $tutores->keys()->toArray())->where('ciclo', $ciclo_viejo)->get();
 
@@ -187,14 +193,12 @@ class TutoriaController extends Controller
             if ($alumnos->count() > 0) {
                 $idTutoria = Tutoria::select('id')->where('IdTutor', $value->IdTutor)->where('ciclo', $ciclo_nuevo)->value('id');
                 foreach ($alumnos as $key => $value) {
-                    $alumno = Alumno::where('IdUser', $value)->first();
                     InscripcionTutorias::firstOrCreate([
                         'IdUser' =>  $value,
                         'IdTutoria'   => $idTutoria,
                         'ciclo'      => $ciclo_nuevo,
                     ]);
-                    $alumno->semestre = $alumno->semestre + 1;
-                    $alumno->update();
+
 
                     //dd($alumno);
                 }
