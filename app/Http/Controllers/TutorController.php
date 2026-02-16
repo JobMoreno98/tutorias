@@ -12,9 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Tutor;
 use App\Models\Tutoria;
 use App\Models\Alumno;
-use App\Models\EvidenciaForm;
 use App\Models\InfoTutorias;
-use Illuminate\Support\Facades\Auth;
 
 class TutorController extends Controller
 {
@@ -127,38 +125,29 @@ class TutorController extends Controller
             ->where('ciclo', '=', $ciclo)
             ->count();
         //return $cuentainscripcionesTutoria;
-         $evidencia = EvidenciaForm::where('user_id', Auth::user()->id)->first();
 
-        if (isset($evidencia->id)) {
-            $alumno = AlumnoInfo::where('IdUser', '=', $alumno_id)->first();
-            //traerse el que ya tiene elegido si aplica
-            $tutorElegido = RegistroTutorias::where('user_id', '=', $alumno_id)
-                ->where('ciclo_inscripcion', '=', $ciclo)
-                ->first();
+        $alumno = AlumnoInfo::where('IdUser', '=', $alumno_id)->first();
+        //traerse el que ya tiene elegido si aplica
+        $tutorElegido = RegistroTutorias::where('user_id', '=', $alumno_id)
+            ->where('ciclo_inscripcion', '=', $ciclo)
+            ->first();
 
-            $tutorias_por_tutor = TutoriaPorTutor::all()
-                ->where('ciclo', '=', $ciclo)
-                ->where('activo', 1);
+        $tutorias_por_tutor = TutoriaPorTutor::all()
+            ->where('ciclo', '=', $ciclo)
+            ->where('activo', 1);
 
-            //Leer ciclos
-            $ciclos = Ciclo::orderBy('id', 'desc')->get();
-            $ciclo_actual = Ciclo::where('activo', '=', 1)->first();
+        //Leer ciclos
+        $ciclos = Ciclo::orderBy('id', 'desc')->get();
+        $ciclo_actual = Ciclo::where('activo', '=', 1)->first();
 
-            return view('alumno.elegirTutor', [
-                'alumno' => $alumno,
-                'cuentainscripcionesTutoria' => $cuentainscripcionesTutoria,
-                'tutorias_por_tutor' => $tutorias_por_tutor,
-                'tutorElegido' => $tutorElegido,
-                'ciclo' => $ciclo,
-                'ciclo_actual' => $ciclo_actual,
-            ]);
-        } else {
-            return redirect()
-                ->route('home')
-                ->with([
-                    'message' => 'El alumno no ha llenado su ficha básica. Favor de Capturar Registro. Primero se tiene que llenar antes de elegir tutor.',
-                ]);
-        }
+        return view('alumno.elegirTutor', [
+            'alumno' => $alumno,
+            'cuentainscripcionesTutoria' => $cuentainscripcionesTutoria,
+            'tutorias_por_tutor' => $tutorias_por_tutor,
+            'tutorElegido' => $tutorElegido,
+            'ciclo' => $ciclo,
+            'ciclo_actual' => $ciclo_actual,
+        ]);
     }
     public function listaTutores()
     {
