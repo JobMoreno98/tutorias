@@ -187,12 +187,12 @@ class AlumnoController extends Controller
         $request->validate([
             'imagen' => ['required', File::types(['jpg', 'jpeg'])->min(100)->max(5120)],
             'semestre' => ['required', 'integer', 'min:1'],
-            'codigo' => ['required', 'integer', 'numeric','min_digits:9'],
+            'codigo' => ['required', 'integer', 'numeric', 'min_digits:9'],
             'nombre' => ['required']
         ], $messages);
 
         $archivo = $request->file('imagen');
-        $nombre =  Auth::user()->name . '.jpg';
+        $nombre =  Auth::user()->name . '_' . $request->codigo . '_' .  '.jpg';
         $nombre = str_replace('/', '-', $nombre);
 
         Storage::disk('images')->put($nombre, \File::get($archivo));
