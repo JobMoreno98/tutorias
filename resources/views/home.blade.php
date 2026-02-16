@@ -53,6 +53,20 @@
                                         @method('POST')
                                         <!-- Campo de archivo -->
                                         <div class="mb-3">
+                                            <label for="nombre" class="form-label">Nombre completo</label>
+                                            <input class="form-control" type="text" id="nombre" name="nombre" value="{{ old('nombre') }}">
+                                        </div>
+                                        <div class="mb-3 d-flex justify-content-evenly">
+                                            <div>
+                                                <label for="codigo" class="form-label">Código</label>
+                                                <input class="form-control" type="number" id="codigo" min="1"  name="codigo" value="{{ old('codigo') }}">
+                                            </div>
+                                            <div>
+                                                <label for="semestre" class="form-label">Semestre</label>
+                                                <input class="form-control" type="number" id="semestre" min="1" name="semestre" value="{{ old('semestre') }}">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="imagen" class="form-label">Selecciona una imagen</label>
                                             <input class="form-control" type="file" id="imagen" name="imagen"
                                                 accept="image/*">

@@ -185,7 +185,10 @@ class AlumnoController extends Controller
             'required' => "El campo :attribute es obligatorio",
         ];
         $request->validate([
-            'imagen' => ['required', File::types(['jpg', 'jpeg'])->min(100)->max(5120)]
+            'imagen' => ['required', File::types(['jpg', 'jpeg'])->min(100)->max(5120)],
+            'semestre' => ['required', 'integer', 'min:1'],
+            'codigo' => ['required', 'integer', 'numeric','min_digits:9'],
+            'nombre' => ['required']
         ], $messages);
 
         $archivo = $request->file('imagen');
@@ -198,6 +201,20 @@ class AlumnoController extends Controller
             'user_id' => Auth::user()->id,
             'file' => $nombre
         ]);
+
+        $alumno = AlumnoInfo::where('IdUser', '=', Auth::user()->id)->first();
+        if (isset($alumno->id)) {
+            $alumno->semestre = $request->semestre;
+            $alumno->codigo = $request->codigo;
+            $alumno->update();
+        } else {
+            Alumno::create([
+                'IdUser' => Auth::user()->id,
+                'codigo' => $request->codigo,
+                'semestre' => $request->semestre,
+            ]);
+        }
+
 
         return redirect()
             ->route('home')
