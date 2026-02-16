@@ -12,7 +12,10 @@ use Illuminate\Http\Request;
 use App\Models\Tutor;
 use App\Models\Tutoria;
 use App\Models\Alumno;
+use App\Models\EvidenciaForm;
 use App\Models\InfoTutorias;
+use Illuminate\Support\Facades\Auth;
+
 class TutorController extends Controller
 {
     public function createTutor()
@@ -124,8 +127,9 @@ class TutorController extends Controller
             ->where('ciclo', '=', $ciclo)
             ->count();
         //return $cuentainscripcionesTutoria;
-        $fichaLlena = Alumno::where('IdUser', '=', $alumno_id)->count();
-        if ($fichaLlena == 1) {
+         $evidencia = EvidenciaForm::where('user_id', Auth::user()->id)->first();
+
+        if (isset($evidencia->id)) {
             $alumno = AlumnoInfo::where('IdUser', '=', $alumno_id)->first();
             //traerse el que ya tiene elegido si aplica
             $tutorElegido = RegistroTutorias::where('user_id', '=', $alumno_id)
